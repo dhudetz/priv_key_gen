@@ -2,9 +2,11 @@ from math import pi, sin, cos
 from direct.showbase.ShowBase import ShowBase
 from direct.task import Task
 import os, sys
-from panda3d.core import LineSegs, NodePath, MeshDrawer, AntialiasAttrib
+from panda3d.core import loadPrcFileData, LineSegs, NodePath, MeshDrawer, AntialiasAttrib,PNMImage
 import numpy as np
 from random import random
+import imageio
+from panda3d.core import loadPrcFileData
 
 class Snake():
     def __init__(self, start_angles=[0,0,0,0],
@@ -44,19 +46,24 @@ class App(ShowBase):
         ShowBase.__init__(self)
 
         #Set properties
-        self.numSnakes = 2
+        self.numSnakes = 1
         angleRange = (0, 360)
-        speedRange = (0.1, 0.2)
-        lengthRange = (25,30)
-        self.modelSize = 4
+        speedRange = (-5, 5)
+        lengthRange = (10,18)
+        self.modelSize = 1.3
+
+
+        #globalClock.setMode(ClockObject.MLimited)
+        #globalClock.setFrameRate(1)
 
     	#Set background color of scene (dark purple)
-        base.setBackgroundColor(0,0,0)
+        base.setBackgroundColor(1,0,0)
         self.taskMgr.add(self.spinCameraTask, "SpinCameraTask")
         self.taskMgr.add(self.updateSnakes, "UpdateSnakes")
         self.nodes = []
-        self.numNodes = 300
+        self.numNodes = 150
         self.snakes = []
+        self.images = []
         for i in range(self.numSnakes):
             startAngles=[]
             startSpeeds=[]
@@ -72,10 +79,23 @@ class App(ShowBase):
         self.cameraSpinSpeed = 0
         self.currentNode = None
         self.frameNumber = 0
+        #base.movie(namePrefix='frame', duration=10, fps=30, format='png')
+
+    def renderToPNM(self):
+        base.graphicsEngine.renderFrame()
+        image = PNMImage()
+        dr = base.camNode.getDisplayRegion(0)
+        dr.getScreenshot(image)
+        return image
+
+    # def exportGif(self):
+    #     imageio.mimsave('images/movie.gif', img_as_uint(self.images))
 
     def updateSnakes(self, task):
         self.frameNumber += 1
-        base.movie(namePrefix=str(self.frameNumber), duration=1, fps=1, format='png')
+        #base.movie(namePrefix=str(self.frameNumber), duration=1, fps=1, format='png')
+
+        #self.images.append(self.renderToPNM())
         for s in range(len(self.snakes)):
             if len(self.nodes)>self.numNodes-1:
                 self.nodes[0].removeNode()
@@ -85,22 +105,26 @@ class App(ShowBase):
             #new_position = (-new_position[0], -new_position[1], -new_position[2])
             new_node.setPos(new_position)
             color = self.snakes[s].getColor()
-            new_node.setColor(color[0],color[1],color[2])
+            #new_node.setColor(color[0]-(self.frameNumber/150),color[1],color[2])
+            new_node.setColor(1,1,1)
             new_node.setTransparency(True)
             new_node.reparentTo(self.render)
             self.nodes.append(new_node)
             for i in range(len(self.nodes)):
                 self.nodes[i].setScale(self.modelSize*i/len(self.nodes),self.modelSize*i/len(self.nodes),self.modelSize*i/len(self.nodes))
                 self.nodes[i].setAlphaScale(i/len(self.nodes))
+        if 1 < self.frameNumber < 360:
+            self.renderToPNM().write('images/'+str(self.frameNumber)+'.png')
         return Task.cont
 
 	# Define a procedure to move the camera.
     def spinCameraTask(self, task):
         angleDegrees = task.time * self.cameraSpinSpeed
         angleRadians = angleDegrees * (pi / 180.0)
-        self.camera.setPos(300 * sin(angleRadians), -300 * cos(angleRadians), 0)
+        self.camera.setPos(200 * sin(angleRadians), -200 * cos(angleRadians), 0)
         self.camera.setHpr(angleDegrees, 0, 0)
         return Task.cont
 
+loadPrcFileData('', 'win-size 400 400')
 app = App()
 app.run()
