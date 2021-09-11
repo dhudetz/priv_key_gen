@@ -16,7 +16,7 @@ def generate():
         'color' :        (0.99, 0.96, 0.92, 0.88, 0.6, 0),
         'spin' :         (0.99, 0.9, 0.7, 0),
         'texture' :      (0.99, 0.98, 0.95, 0),
-        'background' :   (0.5, 0.25, 0),
+        'background' :   (0.6, 0.1, 0),
         'mirror' :       (0.5, 0),
         'wireframe' :    (0.97, 0.7, 0)
     }
@@ -124,11 +124,17 @@ def generate():
         colors.append((0.2,0.2,0.95))
         colors.append((.55,.2,1))
     elif colorSeed > probs['color'][2]: #RGB flash
-        colors.append((0.1,0.1,0.3))
+        colors.append((0.1,0.1,0.5))
         colors.append((0.9,0.9,1))
-        colors.append((0.1,0.3,0.1))
+        colors.append((0.1,0.5,0.1))
         colors.append((0.9,1,0.9))
-        colors.append((0.3,0.1,0.1))
+        colors.append((0.5,0.1,0.1))
+        colors.append((1,0.9,0.9))
+        colors.append((0.1,0.1,0.5))
+        colors.append((0.9,0.9,1))
+        colors.append((0.1,0.5,0.1))
+        colors.append((0.9,1,0.9))
+        colors.append((0.5,0.1,0.1))
         colors.append((1,0.9,0.9))
     elif colorSeed > probs['color'][3]:
         colors.append((.55,.2,1))
