@@ -18,7 +18,8 @@ def generate():
         'texture' :      (0.99, 0.98, 0.95, 0),
         'background' :   (0.6, 0.1, 0),
         'mirror' :       (0.5, 0),
-        'wireframe' :    (0.97, 0.7, 0)
+        'wireframe' :    (0.8, 0.3, 0),
+        'sticker' :      (0.9999,0.999,0.995, 0.95, 0)
     }
 
 
@@ -54,11 +55,11 @@ def generate():
         numNodes = randint(200,300)
     elif snakeSeed > probs['snake'][3]:
         modelSize = sizeNormalizer*1.3
-        numNodes = randint(100,200)
+        numNodes = randint(150,200)
         numSnakes=2
     else:
-        modelSize = sizeNormalizer*1.7
-        numNodes = randint(50,100)
+        modelSize = sizeNormalizer*1.5
+        numNodes = randint(100,150)
         numSnakes=1
 
     speedSeed = random()
@@ -69,18 +70,6 @@ def generate():
     else:
         speedRange = (-5,5)
     lengthRange = (0,20)
-
-
-    if numNodes > 1:
-        if random() > probs['transparency'][0]:
-            transparency = True
-        else:
-            transparency = False
-    else:
-        transparency = True
-
-
-
 
     #COLORS
     colorSeed = random()
@@ -124,18 +113,18 @@ def generate():
         colors.append((0.2,0.2,0.95))
         colors.append((.55,.2,1))
     elif colorSeed > probs['color'][2]: #RGB flash
-        colors.append((0.1,0.1,0.5))
-        colors.append((0.9,0.9,1))
-        colors.append((0.1,0.5,0.1))
-        colors.append((0.9,1,0.9))
-        colors.append((0.5,0.1,0.1))
-        colors.append((1,0.9,0.9))
-        colors.append((0.1,0.1,0.5))
-        colors.append((0.9,0.9,1))
-        colors.append((0.1,0.5,0.1))
-        colors.append((0.9,1,0.9))
-        colors.append((0.5,0.1,0.1))
-        colors.append((1,0.9,0.9))
+        colors.append((0.1,0.2,0.35))
+        colors.append((0.95,0.91,0.89))
+        colors.append((1,0.4,0.25))
+        colors.append((1,0.82,0.2))
+        colors.append((0.1,0.2,0.35))
+        colors.append((0.95,0.91,0.89))
+        colors.append((1,0.4,0.25))
+        colors.append((1,0.82,0.2))
+        colors.append((0.1,0.2,0.35))
+        colors.append((0.95,0.91,0.89))
+        colors.append((1,0.4,0.25))
+        colors.append((1,0.82,0.2))
     elif colorSeed > probs['color'][3]:
         colors.append((.55,.2,1))
         colors.append((0.9,0.4,0))
@@ -150,6 +139,14 @@ def generate():
         colors.append((random(),random(),random()))
     else:
         colors.append((random(),random(),random()))
+
+    if len(colors) > 1:
+        if random() > probs['transparency'][0]:
+            transparency = True
+        else:
+            transparency = False
+    else:
+        transparency = True
 
     #SPINNING
     spinSeed = random()
@@ -211,6 +208,18 @@ def generate():
         drawSnakes = True
         drawWireframe = False
 
+    #STICKERGEN
+    stickerSeed = random()
+    if stickerSeed > probs['sticker'][0]:
+        stickers = 4
+    elif stickerSeed > probs['sticker'][1]:
+        stickers = 3
+    elif stickerSeed > probs['sticker'][2]:
+        stickers = 2
+    elif stickerSeed > probs['sticker'][3]:
+        stickers = 1
+    else:
+        stickers = 0
     #color type
     #gradients
     #shrinking
@@ -219,7 +228,8 @@ def generate():
         'num_snakes' : numSnakes,
         'speed_range' : speedRange,
         'model_size' : modelSize,
-        'num_nodes' : numNodes,
+        'num_snake_heads' : numNodes,
+        'num_wireframes' : 50,
         'model_type' : modelType,
         'colors' : colors,
         'background_color' : backgroundColor,
@@ -228,6 +238,7 @@ def generate():
         'texture' : texture,
         'spin_speed' : spinSpeed,
         'draw_wireframe' : drawWireframe,
-        'draw_snakes' : drawSnakes
+        'draw_snakes' : drawSnakes,
+        'num_stickers' : stickers
     }
     return prop

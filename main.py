@@ -23,6 +23,7 @@ class App(ShowBase):
         self.genNumber = -1
         self.currentNode = None
         self.snakeHeads = []
+        self.wireNodes = []
         self.frameNumber = 0
         self.taskMgr.add(self.spinCameraTask, "SpinCameraTask")
         self.newGeneration()
@@ -30,12 +31,14 @@ class App(ShowBase):
     def newGeneration(self):
         self.genNumber += 1
 
-        #reset
+        #reset values
         self.currentNode = None
         self.frameNumber = 0
         for n in self.snakeHeads:
             n.removeNode()
         self.snakeHeads = []
+        for n in self.wireNodes:
+            n.removeNode()
         self.wireNodes = []
         self.images = []
 
@@ -76,22 +79,19 @@ class App(ShowBase):
         self.anim.clearWireframe()
         self.wireNodes.append(nodePath)
 
-    def clearWireframe(self):
-        self.anim.clearWireframe()
-        for n in self.wireNodes:
-            n.removeNode()
-        self.wireNodes = []
-
-    def clearSnakes(self):
-        if len(self.snakeHeads)>self.prop['num_nodes']-1:
+    def removeLimitedGraphics(self):
+        if len(self.snakeHeads)>self.prop['num_snake_heads']-1:
             self.snakeHeads[0].removeNode()
             self.snakeHeads.pop(0)
+        if len(self.wireNodes)>self.prop['num_wireframes']-1:
+            self.wireNodes[0].removeNode()
+            self.wireNodes.pop(0)
 
     def updateAnimation(self, task):
         self.anim.nextFrame()
         for s in range(self.prop['num_snakes']):
             #remove old snakes and wireframes node
-            self.clearSnakes()
+            self.removeLimitedGraphics()
             #set mirror prop and positions
             if self.prop['mirror'] and s == 1:
                 mirrorPos = self.anim.getSnakeHead(0)
@@ -151,7 +151,6 @@ class App(ShowBase):
         self.frameNumber += 1
         if self.frameNumber > self.maxFrames:
             if self.genNumber < self.maxGens-1:
-                self.clearWireframe()
                 self.newGeneration()
             if self.saveGif:
                 self.taskMgr.add(self.generateGif, "generateGif")
@@ -160,7 +159,7 @@ class App(ShowBase):
             return Task.cont
 
     def generateGif(self, task):
-        gif_compiler.generateGif(self.genNumber-1, self.maxFrames)
+        gif_compiler.generateGif(self.genNumber-1, self.maxFrames, self.prop['num_stickers'])
         return Task.done
 
 	# Define a procedure to move the camera.
@@ -171,10 +170,10 @@ class App(ShowBase):
         self.camera.setHpr(angleDegrees, 0, 0)
         return Task.cont
 
-loadPrcFileData('', 'win-size 200 200')
+loadPrcFileData('', 'win-size 240 240')
 loadPrcFileData('', 'clock-mode limited')
 loadPrcFileData('', 'clock-frame-rate 1')
 
 #loadPrcFileData('', 'window-type offscreen')
-app = App(1000, 150, True)
+app = App(1000, 180, True)
 app.run()
