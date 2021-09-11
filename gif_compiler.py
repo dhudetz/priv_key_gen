@@ -7,7 +7,7 @@ def generateGif(genNumber, numFrames):
     #     filenames[i-1] = tempLoc
     #     filenames[(numFrames*2)-i] = tempLoc
     filenames=[]
-    for i in range(20, numFrames+1):
+    for i in range(1, numFrames+1):
         filenames.append('images/'+str(genNumber)+'/'+str(i)+'.png')
     for i in range(numFrames, 21, -1):
         filenames.append('images/'+str(genNumber)+'/'+str(i)+'.png')
@@ -15,6 +15,6 @@ def generateGif(genNumber, numFrames):
         for filename in filenames:
             image = imageio.imread(filename)
             writer.append_data(image)
-# 
+#
 # for i in range(0,10):
 #     generateGif(i, 200)
