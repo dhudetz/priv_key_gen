@@ -25,7 +25,7 @@ def generateGif(genNumber, numFrames, numStickers=0):
         images.append(Image.open('images/'+str(genNumber)+'/'+str(i+1)+'.png').convert('RGBA'))
     if numStickers > 0:
         prevIDs = []
-        totalStickers = 5
+        totalStickers = 4
         for i in range(numStickers):
             stickerID = randint(0,totalStickers-1)
             if len(prevIDs) > 0:

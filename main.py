@@ -2,7 +2,7 @@ from math import pi, sin, cos
 from direct.showbase.ShowBase import ShowBase
 from direct.task import Task
 import os, sys
-from panda3d.core import loadPrcFileData, LineSegs, NodePath, MeshDrawer, AntialiasAttrib,PNMImage
+from panda3d.core import loadPrcFileData, LineSegs, NodePath, MeshDrawer, LPoint3f
 import numpy as np
 from random import random, randint
 import imageio
@@ -19,6 +19,8 @@ class App(ShowBase):
         self.maxGens = maxGens
         self.maxFrames = maxFrames
         self.saveGif = saveGif
+
+        self.origin = LPoint3f((0,0,0))
 
         self.genNumber = -1
         self.currentNode = None
@@ -72,8 +74,9 @@ class App(ShowBase):
             lines.setColor(self.currentColor[0],self.currentColor[1],self.currentColor[2])
             lines.moveTo(wire[0][0],wire[0][1],wire[0][2])
             lines.drawTo(wire[1][0],wire[1][1],wire[1][2])
-            lines.setThickness(2)
+            lines.setThickness(1)
         node = lines.create()
+
         nodePath = NodePath(node)
         nodePath.reparentTo(render)
         self.anim.clearWireframe()
@@ -104,6 +107,7 @@ class App(ShowBase):
             if self.prop['texture'] != None:
                 newNode.setTexture(self.texture)
             newNode.setPos(newPos)
+            newNode.setHpr(newPos[0]*self.prop['model_spin'],newPos[1]*self.prop['model_spin'],newPos[2]*self.prop['model_spin'])
 
             #NODE COLORS
             if self.numColors > 1:
@@ -138,9 +142,11 @@ class App(ShowBase):
                 newNode.reparentTo(self.render)
             self.snakeHeads.append(newNode)
             for i in range(len(self.snakeHeads)):
-                self.snakeHeads[i].setScale(self.prop['model_size']*i/len(self.snakeHeads),
-                    self.prop['model_size']*i/len(self.snakeHeads),self.prop['model_size']*i/len(self.snakeHeads))
-                self.snakeHeads[i].setAlphaScale(i/len(self.snakeHeads))
+                alphaMod = i/len(self.snakeHeads)
+                scaleMod = i/len(self.snakeHeads)
+                finalScale = (self.prop['model_scale'][0]*scaleMod, self.prop['model_scale'][1]*scaleMod, self.prop['model_scale'][2]*scaleMod)
+                self.snakeHeads[i].setScale(finalScale[0],finalScale[1],finalScale[2])
+                self.snakeHeads[i].setAlphaScale(alphaMod)
 
             if self.prop['draw_wireframe'] and self.frameNumber%1==0:
                 self.renderWireframe(self.anim.getWireframe())
@@ -164,9 +170,10 @@ class App(ShowBase):
 
 	# Define a procedure to move the camera.
     def spinCameraTask(self, task):
-        angleDegrees = task.time * self.prop['spin_speed']
+        angleDegrees = self.frameNumber * self.prop['spin_speed']
         angleRadians = angleDegrees * (pi / 180.0)
-        self.camera.setPos(200 * sin(angleRadians), -200 * cos(angleRadians), 0)
+        radius = 210 + 20 * cos(angleRadians/2)
+        self.camera.setPos(radius * sin(angleRadians), -radius * cos(angleRadians), 0)
         self.camera.setHpr(angleDegrees, 0, 0)
         return Task.cont
 
@@ -175,5 +182,5 @@ loadPrcFileData('', 'clock-mode limited')
 loadPrcFileData('', 'clock-frame-rate 1')
 
 #loadPrcFileData('', 'window-type offscreen')
-app = App(1000, 180, True)
+app = App(1000, 200, True)
 app.run()

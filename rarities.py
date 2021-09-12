@@ -2,6 +2,7 @@ from random import random, randint
 
 def generate():
     rarity = 100
+    #SPECIAL CASES:
     if random() > 0.995:
         minecraft = True
     else:
@@ -9,14 +10,14 @@ def generate():
 
     #Set probablity scores
     probs={
-        'model' :        (0.99, 0.4, 0),
+        'model' :        (0.995, 0.85, 0.5, 0),
         'snake' :        (0.98, 0.92, 0.75, 0.5, 0),
-        'speed' :        (0.85, 0.6, 0),
+        'speed' :        (0.99, 0.6, 0),
         'transparency' : (0.2, 0),
-        'color' :        (0.99, 0.96, 0.92, 0.88, 0.6, 0),
-        'spin' :         (0.99, 0.9, 0.7, 0),
+        'color' :        (0.995, 0.98, 0.97, 0.95, 0.92, 0.88, 0.3, 0),
+        'spin' :         (0.99, 0.9, 0),
         'texture' :      (0.99, 0.98, 0.95, 0),
-        'background' :   (0.6, 0.1, 0),
+        'background' :   (0.6, 0.3, 0),
         'mirror' :       (0.5, 0),
         'wireframe' :    (0.8, 0.3, 0),
         'sticker' :      (0.9999,0.999,0.995, 0.95, 0)
@@ -28,47 +29,60 @@ def generate():
     if minecraft:
         sizeNormalizer = 5
         modelType = 'box.egg'
+        scaleMod = (1,1,1)
     else:
         if modelSeed > probs['model'][0]:
             sizeNormalizer = 8
+            scaleMod = (1,1,1)
             modelType = 'monkey.egg'
         elif modelSeed > probs['model'][1]:
             sizeNormalizer = 2
+            scaleMod = (3,0.5,0.5)
+            modelType = 'Icosahedron.egg'
+        elif  modelSeed > probs['model'][2]:
+            sizeNormalizer = 2
+            scaleMod = (1,1,1)
             modelType = 'Icosahedron.egg'
         else:
-            sizeNormalizer = 5
+            sizeNormalizer = 4.5
+            scaleMod = (1,1,1)
             modelType = 'box.egg'
 
     #NUMBER OF MEGARMS, numNODES, SIZES
     snakeSeed = random()
     if snakeSeed > probs['snake'][0]:
         numSnakes=5
-        modelSize = sizeNormalizer*0.5
+        sizeMod = 0.6
         numNodes = randint(400,500)
     elif snakeSeed > probs['snake'][1]:
         numSnakes=4
-        modelSize = sizeNormalizer*0.85
+        sizeMod = 0.75
         numNodes = randint(300,400)
     elif snakeSeed > probs['snake'][2]:
         numSnakes=3
-        modelSize = sizeNormalizer*1
+        sizeMod = 1
         numNodes = randint(200,300)
     elif snakeSeed > probs['snake'][3]:
-        modelSize = sizeNormalizer*1.3
+        sizeMod = 1.1
         numNodes = randint(150,200)
         numSnakes=2
     else:
-        modelSize = sizeNormalizer*1.5
+        sizeMod = 1.2
         numNodes = randint(100,150)
         numSnakes=1
+
+    modelScale = (sizeMod * sizeNormalizer * scaleMod[0], sizeMod * sizeNormalizer * scaleMod[1], sizeMod * sizeNormalizer * scaleMod[2])
 
     speedSeed = random()
     if speedSeed > probs['speed'][0]: #SPARKLES
         speedRange = (-75,75)
+        modelSpin = 0
     elif speedSeed > probs['speed'][1]:
-        speedRange = (-15,15)
+        speedRange = (-10,10)
+        modelSpin = 2
     else:
-        speedRange = (-5,5)
+        speedRange = (-4,4)
+        modelSpin = 3.5
     lengthRange = (0,20)
 
     #COLORS
@@ -93,7 +107,21 @@ def generate():
         colors.append((0.1,0.475,0.3))
         colors.append((0.15,0.1,0.50))
         colors.append((.30,.1,0.5))
-    elif colorSeed > probs['color'][1]: #RAINBOW
+    elif colorSeed > probs['color'][1]: #zebra
+        colors.append((random(),random(),random()))
+        colors.append((random(),random(),random()))
+        colors.append((random(),random(),random()))
+        colors.append((random(),random(),random()))
+        colors.append((random(),random(),random()))
+        colors.append((random(),random(),random()))
+    elif colorSeed > probs['color'][2]: #8 randoms
+        colors.append((0,0,0))
+        colors.append((1,1,1))
+        colors.append((0,0,0))
+        colors.append((1,1,1))
+        colors.append((0,0,0))
+        colors.append((1,1,1))
+    elif colorSeed > probs['color'][3]: #RAINBOW
         colors.append((0.9,0,0))
         colors.append((0.9,0.4,0))
         colors.append((0.95,0.9,0.05))
@@ -112,7 +140,7 @@ def generate():
         colors.append((0.2,0.95,0.2))
         colors.append((0.2,0.2,0.95))
         colors.append((.55,.2,1))
-    elif colorSeed > probs['color'][2]: #RGB flash
+    elif colorSeed > probs['color'][4]: #RGB flash
         colors.append((0.1,0.2,0.35))
         colors.append((0.95,0.91,0.89))
         colors.append((1,0.4,0.25))
@@ -125,7 +153,7 @@ def generate():
         colors.append((0.95,0.91,0.89))
         colors.append((1,0.4,0.25))
         colors.append((1,0.82,0.2))
-    elif colorSeed > probs['color'][3]:
+    elif colorSeed > probs['color'][5]:
         colors.append((.55,.2,1))
         colors.append((0.9,0.4,0))
         colors.append((.55,.2,1))
@@ -134,10 +162,12 @@ def generate():
         colors.append((0.9,0.4,0))
         colors.append((.55,.2,1))
         colors.append((0.9,0.4,0))
-    elif colorSeed > probs['color'][4]:
+    elif colorSeed > probs['color'][6]:
+        colors.append((random(),random(),random()))
         colors.append((random(),random(),random()))
         colors.append((random(),random(),random()))
     else:
+        colors.append((random(),random(),random()))
         colors.append((random(),random(),random()))
 
     if len(colors) > 1:
@@ -148,17 +178,17 @@ def generate():
     else:
         transparency = True
 
-    #SPINNING
+    #CAMERA SPINNING
     spinSeed = random()
     if spinSeed > probs['spin'][0]:
-        spinSpeed = 1000
+        spinSpeed = randint(-15,15)
     elif spinSeed > probs['spin'][1]:
-        spinSpeed = 200
-    elif spinSeed > probs['spin'][2]:
-        spinSpeed = 45
+        spinSpeed = randint(-2,2)
     else:
-        spinSpeed = 20
+        spinSpeed = randint(-1,1)
         #none, zebra, multi
+    if random() > 0.5:
+        spinSpeed*-1
 
     #TEXTURES
     texSeed = random()
@@ -195,7 +225,7 @@ def generate():
 
     drawSnakes = True
 
-    if numSnakes > 1:
+    if numSnakes > 2:
         wireframeSeed = random()
         if wireframeSeed > probs['wireframe'][0] and mirror == False:
             drawWireframe = True
@@ -227,9 +257,9 @@ def generate():
     prop={
         'num_snakes' : numSnakes,
         'speed_range' : speedRange,
-        'model_size' : modelSize,
+        'model_scale' : modelScale,
         'num_snake_heads' : numNodes,
-        'num_wireframes' : 50,
+        'num_wireframes' : 60,
         'model_type' : modelType,
         'colors' : colors,
         'background_color' : backgroundColor,
@@ -239,6 +269,7 @@ def generate():
         'spin_speed' : spinSpeed,
         'draw_wireframe' : drawWireframe,
         'draw_snakes' : drawSnakes,
-        'num_stickers' : stickers
+        'num_stickers' : stickers,
+        'model_spin' : modelSpin
     }
     return prop

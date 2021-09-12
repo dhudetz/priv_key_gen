@@ -2,12 +2,12 @@ import numpy as np
 from math import pi, sin, cos
 from random import random
 
-class Snake():
-    def __init__(self, startAngles,
-    angleSpeeds, lengths):
-        self.angles = np.deg2rad(startAngles)
-        self.angleSpeeds = np.deg2rad(angleSpeeds)
-        self.l = lengths
+class Megarm():
+    def __init__(self, angles, angleSpeeds, lengths, numJoints = 3):
+        self.angles = angles
+        self.angleSpeeds = angleSpeeds
+        self.lengths = lengths
+        self.numJoints = numJoints
 
     def nextFrame(self):
         #update angles with angle speeds
@@ -26,8 +26,8 @@ class Snake():
         angle_temp=0
         for t in range(1,len(self.angles)):
             angle_temp+=self.angles[t]
-            x_temp+=self.l[t-1]*sin(angle_temp)
-            z+=self.l[t-1]*cos(angle_temp)
+            x_temp+=self.lengths[t-1]*sin(angle_temp)
+            z+=self.lengths[t-1]*cos(angle_temp)
         x=x_temp*cos(self.angles[0])
         y=x_temp*sin(self.angles[0])
         self.headPosition = (x,y,z)
@@ -37,28 +37,48 @@ class MasterAnimation():
         self.prop = prop
         self.snakes = []
         self.wireframe = []
-        for i in range(prop['num_snakes']):
-            snakeProps = self.generateSnakeProps()
-            self.snakes.append(Snake(snakeProps[0],snakeProps[1],snakeProps[2]))
 
-    def generateSnakeProps(self):
+        #special boi
+        numSnakes = prop['num_snakes']
+        mirror = prop['mirror']
+
         totalLength = 46
-        angleRange = (0, 360)
-        lengthRange = (0,20) #2
+        if numSnakes < 4:
+            incrementalLength = int(totalLength/numSnakes-1)
+            for i in range(numSnakes):
+                geom = self.generateGeom((0, 360), prop['speed_range'], (numSnakes-i)*incrementalLength, 3)
+                self.snakes.append(Megarm(geom[0], geom[1], geom[2]))
+        else:
+            for i in range(numSnakes):
+                geom = self.generateGeom((0, 360), prop['speed_range'], totalLength, 3)
+                self.snakes.append(Megarm(geom[0], geom[1], geom[2]))
+
+    def generateGeom(self, angleRange, speedRange, totalLength, numJoints = 3):
+        lengthRange = (0,totalLength/numJoints) #2
         startAngles=[]
         startSpeeds=[]
         startLengths=[]
-        for j in range(4):
+        for j in range(numJoints+1):
             startAngles.append(random()*(angleRange[1]-angleRange[0])+angleRange[0])
-        for j in range(4):
+        for j in range(numJoints):
             # if j == 0:
             #     startSpeeds.append(0)
             # else:
-            startSpeeds.append(random()*(self.prop['speed_range'][1]-self.prop['speed_range'][0])+self.prop['speed_range'][0])
-        for j in range(2):
-            startLengths.append(random()*(lengthRange[1]-lengthRange[0])+lengthRange[0])
-        startLengths.append(totalLength - (startLengths[0]+startLengths[1]))
-        return (startAngles,startSpeeds,startLengths)
+            startSpeeds.append(random()*(speedRange[1]-speedRange[0])+speedRange[0])
+        tempSpeed = 0
+        for s in startSpeeds:
+            tempSpeed += np.abs(s)
+        startSpeeds.append(speedRange[1]*2 - tempSpeed)
+        if numJoints > 1:
+            for j in range(numJoints-1):
+                startLengths.append(random()*(lengthRange[1]-lengthRange[0])+lengthRange[0])
+            tempLength = 0
+            for l in startLengths:
+                tempLength += l
+            startLengths.append(totalLength - tempLength)
+        else:
+            startLengths.append(totalLength)
+        return(np.deg2rad(startAngles),np.deg2rad(startSpeeds),startLengths)
 
     def clearWireframe(self):
         self.wireframe = []
