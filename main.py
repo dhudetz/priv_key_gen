@@ -1,5 +1,6 @@
 from math import pi, sin, cos
 from direct.showbase.ShowBase import ShowBase
+from direct.gui.OnscreenImage import OnscreenImage
 from direct.task import Task
 import os, sys
 from panda3d.core import loadPrcFileData, LineSegs, NodePath, MeshDrawer, LPoint3f
@@ -27,6 +28,7 @@ class App(ShowBase):
         self.snakeHeads = []
         self.wireNodes = []
         self.frameNumber = 0
+        self.background = None
         self.taskMgr.add(self.spinCameraTask, "SpinCameraTask")
         self.newGeneration()
 
@@ -43,6 +45,9 @@ class App(ShowBase):
             n.removeNode()
         self.wireNodes = []
         self.images = []
+        if self.background != None:
+            self.background.destroy()
+            self.background = None
 
         #populate self.prop[]
         self.prop = rarities.generate()
@@ -56,6 +61,11 @@ class App(ShowBase):
         self.numColors = len(self.prop['colors'])
         if self.numColors > 1:
             self.colorSectionSize=np.floor(self.maxFrames/(self.numColors-1))
+
+        #SET BACKGROUND
+        if self.prop['background_image'] != None:
+            self.background = OnscreenImage(parent=render2dp, image='background/'+self.prop['background_image']) # Load an image object
+            base.cam2dp.node().getDisplayRegion(0).setSort(-20)
 
         #START ANIMATING
         self.anim = MasterAnimation(self.prop)
@@ -74,7 +84,7 @@ class App(ShowBase):
             lines.setColor(self.currentColor[0],self.currentColor[1],self.currentColor[2])
             lines.moveTo(wire[0][0],wire[0][1],wire[0][2])
             lines.drawTo(wire[1][0],wire[1][1],wire[1][2])
-            lines.setThickness(1)
+            lines.setThickness(2)
         node = lines.create()
 
         nodePath = NodePath(node)
@@ -170,9 +180,9 @@ class App(ShowBase):
 
 	# Define a procedure to move the camera.
     def spinCameraTask(self, task):
-        angleDegrees = self.frameNumber * self.prop['spin_speed']
+        angleDegrees = self.frameNumber * self.prop['camera_spin']
         angleRadians = angleDegrees * (pi / 180.0)
-        radius = 210 + 20 * cos(angleRadians/2)
+        radius = 210 + 40 * cos(angleRadians/2)
         self.camera.setPos(radius * sin(angleRadians), -radius * cos(angleRadians), 0)
         self.camera.setHpr(angleDegrees, 0, 0)
         return Task.cont

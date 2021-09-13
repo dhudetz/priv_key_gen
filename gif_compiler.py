@@ -19,9 +19,9 @@ def generateGif(genNumber, numFrames, numStickers=0):
         images.append(Image.open('images/'+str(genNumber)+'/'+str(i+1)+'.png').convert('RGBA'))
     for i in range(numFrames, midway, -1):
         images.append(Image.open('images/'+str(genNumber)+'/'+str(i)+'.png').convert('RGBA'))
-    for i in range(midway, 2, -1):
+    for i in range(midway, 22, -1):
         images.append(Image.open('images/'+str(genNumber)+'/'+str(i)+'.png').convert('RGBA'))
-    for i in range(2, midway):
+    for i in range(22, midway):
         images.append(Image.open('images/'+str(genNumber)+'/'+str(i+1)+'.png').convert('RGBA'))
     if numStickers > 0:
         prevIDs = []

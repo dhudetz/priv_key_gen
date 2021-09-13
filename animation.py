@@ -43,32 +43,30 @@ class MasterAnimation():
         mirror = prop['mirror']
 
         totalLength = 46
-        if numSnakes < 4:
+        if numSnakes < 0:
             incrementalLength = int(totalLength/numSnakes-1)
             for i in range(numSnakes):
-                geom = self.generateGeom((0, 360), prop['speed_range'], (numSnakes-i)*incrementalLength, 3)
+                geom = self.generateGeom((0, 360), prop['base_speed_range'], prop['joint_speed_range'], (numSnakes-i)*incrementalLength, 3)
                 self.snakes.append(Megarm(geom[0], geom[1], geom[2]))
         else:
             for i in range(numSnakes):
-                geom = self.generateGeom((0, 360), prop['speed_range'], totalLength, 3)
+                geom = self.generateGeom((0, 360), prop['base_speed_range'], prop['joint_speed_range'], totalLength, 3)
                 self.snakes.append(Megarm(geom[0], geom[1], geom[2]))
 
-    def generateGeom(self, angleRange, speedRange, totalLength, numJoints = 3):
+    def generateGeom(self, angleRange, baseSpeedRange, jointSpeedRange, totalLength, numJoints = 3):
         lengthRange = (0,totalLength/numJoints) #2
         startAngles=[]
         startSpeeds=[]
         startLengths=[]
         for j in range(numJoints+1):
             startAngles.append(random()*(angleRange[1]-angleRange[0])+angleRange[0])
-        for j in range(numJoints):
-            # if j == 0:
-            #     startSpeeds.append(0)
-            # else:
-            startSpeeds.append(random()*(speedRange[1]-speedRange[0])+speedRange[0])
+        startSpeeds.append(random()*(baseSpeedRange[1]-baseSpeedRange[0])+baseSpeedRange[0])
+        for j in range(1, numJoints):
+            startSpeeds.append(random()*(jointSpeedRange[1]-jointSpeedRange[0])+jointSpeedRange[0])
         tempSpeed = 0
         for s in startSpeeds:
             tempSpeed += np.abs(s)
-        startSpeeds.append(speedRange[1]*2 - tempSpeed)
+        startSpeeds.append(jointSpeedRange[1]*4 - tempSpeed)
         if numJoints > 1:
             for j in range(numJoints-1):
                 startLengths.append(random()*(lengthRange[1]-lengthRange[0])+lengthRange[0])

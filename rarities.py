@@ -13,11 +13,11 @@ def generate():
         'model' :        (0.995, 0.85, 0.5, 0),
         'snake' :        (0.98, 0.92, 0.75, 0.5, 0),
         'speed' :        (0.99, 0.6, 0),
-        'transparency' : (0.2, 0),
+        'transparency' : (0, 0),
         'color' :        (0.995, 0.98, 0.97, 0.95, 0.92, 0.88, 0.3, 0),
         'spin' :         (0.99, 0.9, 0),
-        'texture' :      (0.99, 0.98, 0.95, 0),
-        'background' :   (0.6, 0.3, 0),
+        'texture' :      (0.99, 0.98, 0.95, 0.91, 0),
+        'background' :   (0.99, 0.6, 0.3, 0),
         'mirror' :       (0.5, 0),
         'wireframe' :    (0.8, 0.3, 0),
         'sticker' :      (0.9999,0.999,0.995, 0.95, 0)
@@ -73,17 +73,31 @@ def generate():
 
     modelScale = (sizeMod * sizeNormalizer * scaleMod[0], sizeMod * sizeNormalizer * scaleMod[1], sizeMod * sizeNormalizer * scaleMod[2])
 
+    #JOINT SPEED RANGE
     speedSeed = random()
     if speedSeed > probs['speed'][0]: #SPARKLES
-        speedRange = (-75,75)
+        jointSpeedRange = (-75,75)
         modelSpin = 0
     elif speedSeed > probs['speed'][1]:
-        speedRange = (-10,10)
+        jointSpeedRange = (-10,10)
         modelSpin = 2
     else:
-        speedRange = (-4,4)
+        jointSpeedRange = (-4,4)
         modelSpin = 3.5
     lengthRange = (0,20)
+
+    #BASE SPEED RANGE
+    if speedSeed > probs['speed'][0]: #SPARKLES
+        baseSpeedRange = (-75,75)
+        modelSpin = 0
+    elif speedSeed > probs['speed'][1]:
+        baseSpeedRange = (-10,10)
+        modelSpin = 2
+    else:
+        baseSpeedRange = (-4,4)
+        modelSpin = 3.5
+    lengthRange = (0,20)
+
 
     #COLORS
     colorSeed = random()
@@ -192,30 +206,38 @@ def generate():
 
     #TEXTURES
     texSeed = random()
+    backgroundImage = None
     if minecraft:
         texture = '0.png'  #MINECRAFT GRASS
-        colors=(((1,1,1),(1,1,1)))
+        colors=((1,1,1),(1,1,1))
         backgroundColor = (0.380, 0.882, 0.960)
     elif texSeed > probs['texture'][0]:
         texture = 'rainbow.png'  #icy (probably temp)
-        colors=(((1,1,1),(1,1,1)))
+        colors=((1,1,1),(1,1,1))
         backgroundColor = (1,1,1)
     elif texSeed > probs['texture'][1]:
         texture = '1.png'  #icy (probably temp)
-        colors=(((1,1,1),(1,1,1)))
+        colors=((1,1,1),(1,1,1))
         backgroundColor = (0.2, 0.4, 0.9)
     elif texSeed > probs['texture'][2]:
         texture = '2.png' #shitty temp
-        colors=(((0.2,0.05,0),(0.8,0.95,1)))
+        colors=((0.2,0.05,0),(0.8,0.95,1))
         backgroundColor = 'opposite'
+    elif texSeed > probs['texture'][3]:
+        colors=((1,1,1),(1,1,1))
+        texture = None
+        backgroundColor = (0,0,0)
+        backgroundImage = 'tv.jpg'
     else:
         backgroundSeed = random()
         if backgroundSeed > probs['background'][0]:
-            backgroundColor = 'opposite'
+            backgroundColor = (0.2,0,0.2)
         elif backgroundSeed > probs['background'][1]:
-            backgroundColor = (0,0,0)
+            backgroundColor = 'opposite'
+        elif backgroundSeed > probs['background'][2]:
+            backgroundColor = (0,0.2,0.2)
         else:
-            backgroundColor = (1,1,1)
+            backgroundColor = (0,0,0)
         texture = None
 
     if random() > probs['mirror'][0]: #I WANT DOUBLE MIRRORS
@@ -256,17 +278,19 @@ def generate():
     #specialCases (zebra, rainbow, cotton_candy, leapord), PURE FIRE
     prop={
         'num_snakes' : numSnakes,
-        'speed_range' : speedRange,
+        'base_speed_range' : baseSpeedRange,
+        'joint_speed_range' : jointSpeedRange,
         'model_scale' : modelScale,
         'num_snake_heads' : numNodes,
-        'num_wireframes' : 60,
+        'num_wireframes' : 85,
         'model_type' : modelType,
         'colors' : colors,
         'background_color' : backgroundColor,
+        'background_image' : backgroundImage,
         'transparency' : transparency,
         'mirror' : mirror,
         'texture' : texture,
-        'spin_speed' : spinSpeed,
+        'camera_spin' : spinSpeed,
         'draw_wireframe' : drawWireframe,
         'draw_snakes' : drawSnakes,
         'num_stickers' : stickers,
