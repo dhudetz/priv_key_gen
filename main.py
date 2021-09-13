@@ -68,6 +68,7 @@ class App(ShowBase):
             base.cam2dp.node().getDisplayRegion(0).setSort(-20)
 
         #START ANIMATING
+        self.cameraRoll = randint(0,360)
         self.anim = MasterAnimation(self.prop)
         self.taskMgr.add(self.updateAnimation, "UpdateSnakes")
 
@@ -105,12 +106,9 @@ class App(ShowBase):
         for s in range(self.prop['num_snakes']):
             #remove old snakes and wireframes node
             self.removeLimitedGraphics()
-            #set mirror prop and positions
-            if self.prop['mirror'] and s == 1:
-                mirrorPos = self.anim.getSnakeHead(0)
-                newPos = (-mirrorPos[0], -mirrorPos[1], -mirrorPos[2])
-            else:
-                newPos = self.anim.getSnakeHead(s)
+
+            #get position
+            newPos = self.anim.getSnakeHead(s)
 
             #set model and textures (might want to make the model load only once)
             newNode = loader.loadModel('models/'+self.prop['model_type'])
@@ -184,7 +182,7 @@ class App(ShowBase):
         angleRadians = angleDegrees * (pi / 180.0)
         radius = 210 + 40 * cos(angleRadians/2)
         self.camera.setPos(radius * sin(angleRadians), -radius * cos(angleRadians), 0)
-        self.camera.setHpr(angleDegrees, 0, 0)
+        self.camera.setHpr(angleDegrees, 0, self.cameraRoll)
         return Task.cont
 
 loadPrcFileData('', 'win-size 240 240')

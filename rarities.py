@@ -18,7 +18,7 @@ def generate():
         'spin' :         (0.99, 0.9, 0),
         'texture' :      (0.99, 0.98, 0.95, 0.91, 0),
         'background' :   (0.99, 0.6, 0.3, 0),
-        'mirror' :       (0.5, 0),
+        'mirror' :       (0.3, 0),
         'wireframe' :    (0.8, 0.3, 0),
         'sticker' :      (0.9999,0.999,0.995, 0.95, 0)
     }
@@ -53,18 +53,18 @@ def generate():
     if snakeSeed > probs['snake'][0]:
         numSnakes=5
         sizeMod = 0.6
-        numNodes = randint(400,500)
+        numNodes = randint(300,350)
     elif snakeSeed > probs['snake'][1]:
         numSnakes=4
         sizeMod = 0.75
-        numNodes = randint(300,400)
+        numNodes = randint(200,300)
     elif snakeSeed > probs['snake'][2]:
         numSnakes=3
         sizeMod = 1
-        numNodes = randint(200,300)
+        numNodes = randint(125,200)
     elif snakeSeed > probs['snake'][3]:
         sizeMod = 1.1
-        numNodes = randint(150,200)
+        numNodes = randint(50,75)
         numSnakes=2
     else:
         sizeMod = 1.2
@@ -76,25 +76,25 @@ def generate():
     #JOINT SPEED RANGE
     speedSeed = random()
     if speedSeed > probs['speed'][0]: #SPARKLES
-        jointSpeedRange = (-75,75)
+        jointSpeedRange = (10,20)
         modelSpin = 0
     elif speedSeed > probs['speed'][1]:
-        jointSpeedRange = (-10,10)
+        jointSpeedRange = (3,6)
         modelSpin = 2
     else:
-        jointSpeedRange = (-4,4)
+        jointSpeedRange = (1.5,3)
         modelSpin = 3.5
     lengthRange = (0,20)
 
     #BASE SPEED RANGE
     if speedSeed > probs['speed'][0]: #SPARKLES
-        baseSpeedRange = (-75,75)
+        baseSpeedRange = (0,1)
         modelSpin = 0
     elif speedSeed > probs['speed'][1]:
-        baseSpeedRange = (-10,10)
+        baseSpeedRange = (3,6)
         modelSpin = 2
     else:
-        baseSpeedRange = (-4,4)
+        baseSpeedRange = (1.5,3)
         modelSpin = 3.5
     lengthRange = (0,20)
 
