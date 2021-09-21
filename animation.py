@@ -47,7 +47,7 @@ class MasterAnimation():
         numSnakes = prop['num_snakes']
         mirror = prop['mirror']
 
-        totalLength = 46
+        totalLength = 80
         numJoints = 3
         if mirror and numSnakes == 2:
             geom = self.generateGeom((0, 360), prop['base_speed_range'], prop['joint_speed_range'], totalLength, numJoints)
@@ -77,14 +77,10 @@ class MasterAnimation():
         startLengths=[]
         dir = [-1,1]
         for j in range(numJoints+1):
-            startAngles.append(dir[randint(0,1)]*random()*(angleRange[1]-angleRange[0])+angleRange[0])
-        startSpeeds.append(dir[randint(0,1)]*random()*(baseSpeedRange[1]-baseSpeedRange[0])+baseSpeedRange[0])
+            startAngles.append(dir[randint(0,1)]*(random()*(angleRange[1]-angleRange[0])+angleRange[0]))
+        startSpeeds.append(dir[randint(0,1)]*(random()*(baseSpeedRange[1]-baseSpeedRange[0])+baseSpeedRange[0]))
         for j in range(1, numJoints+1):
-            startSpeeds.append(dir[randint(0,1)]*random()*(jointSpeedRange[1]-jointSpeedRange[0])+jointSpeedRange[0])
-        tempSpeed = 0
-        #for s in startSpeeds:
-        #    tempSpeed += np.abs(s)
-        #startSpeeds.append(jointSpeedRange[1]*2.5 - tempSpeed)
+            startSpeeds.append(dir[randint(0,1)]*(random()*(jointSpeedRange[1]-jointSpeedRange[0])+jointSpeedRange[0]))
         if numJoints > 1:
             for j in range(numJoints-1):
                 startLengths.append(random()*(lengthRange[1]-lengthRange[0])+lengthRange[0])

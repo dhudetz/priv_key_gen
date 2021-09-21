@@ -4,25 +4,53 @@ from numpy import ceil
 from shutil import rmtree
 from random import randint
 import os
-from PIL import Image
+import tensorflow_hub as hub
+import tensorflow as tf
+import numpy as np
+import cv2
+from PIL import Image, ImageFilter
 
 def addSticker(background, stickerID):
     foreground = Image.open('stickers/'+str(stickerID)+'.png')
     background.paste(foreground, (0, 0), foreground)
     return background
 
-def generateGif(genNumber, numFrames, numStickers=0):
+def load_image(img_path):
+    img = tf.io.read_file(img_path)
+    img = tf.image.decode_image(img, channels=3)
+    img = tf.image.convert_image_dtype(img, tf.float32)
+    img = img[tf.newaxis, :]
+    return img
+
+# MAKE SURE TO GIVE CREDIT AND FOLLOW LICENSE: https://creativecommons.org/licenses/by/3.0/
+# https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2
+styleModel = hub.load('https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2')
+def getImage(path, postProcess):
+    global styleModel
+    #add postprocessing
+    if postProcess == '':
+        return Image.open(path).convert('RGBA')
+    elif postProcess == 'contour':
+        return Image.open(path).convert('RGBA').filter(ImageFilter.CONTOUR)
+    else:
+        content_image = load_image(path)
+        style_image = load_image('neural_style/'+postProcess)
+        stylized_image = styleModel(tf.constant(content_image), tf.constant(style_image))[0]
+        stylized_image = cv2.cvtColor(np.squeeze(stylized_image)*255, cv2.COLOR_BGR2RGB)
+        #stylized_image = np.squeeze(stylized_image)*255
+        stylized_image = stylized_image.astype(np.uint8)
+        return Image.fromarray(stylized_image)
+        #cv2.imwrite(path, cv2.cvtColor(np.squeeze(stylized_image)*255, cv2.COLOR_BGR2RGB))
+
+def generateGif(genNumber, numFrames, postProcess='', numStickers=0):
+    global style_image
     images=[]
     padding=0.1
-    midway = int(numFrames/2)
+    midway = int(numFrames/3)
     for i in range(midway, numFrames):
-        images.append(Image.open('images/'+str(genNumber)+'/'+str(i+1)+'.png').convert('RGBA'))
-    for i in range(numFrames, midway, -1):
-        images.append(Image.open('images/'+str(genNumber)+'/'+str(i)+'.png').convert('RGBA'))
-    for i in range(midway, 22, -1):
-        images.append(Image.open('images/'+str(genNumber)+'/'+str(i)+'.png').convert('RGBA'))
-    for i in range(22, midway):
-        images.append(Image.open('images/'+str(genNumber)+'/'+str(i+1)+'.png').convert('RGBA'))
+        images.append(getImage('images/'+str(genNumber)+'/'+str(i+1)+'.png', postProcess))
+    for i in range(1, midway):
+        images.append(getImage('images/'+str(genNumber)+'/'+str(i+1)+'.png', postProcess))
     if numStickers > 0:
         prevIDs = []
         totalStickers = 4
@@ -39,6 +67,3 @@ def generateGif(genNumber, numFrames, numStickers=0):
     tempDir = os.path.join(os.getcwd(), r'images')
     saveDir = os.path.join(tempDir, str(genNumber))
     rmtree(saveDir)
-#
-# for i in range(0,10):
-#     generateGif(i, 200)
