@@ -2,7 +2,7 @@ from random import random, randint
 
 def generate():
     themePoints = {
-        'common' :              70,
+        'common' :              100,
         'neon_sunset' :         5,
         'ice' :                 5,
         'lava' :                5,
@@ -14,9 +14,13 @@ def generate():
         'sprinkles' :           5,
         'rainbow' :             2,
         'earth' :               5,
-        'red_blue' :            2,
+        'red_blue' :            5,
+        'underwater' :          5,
         'dark_energy' :         2,
-        'light_energy' :        2,
+        'gradient_tv' :         2,
+        'deep_space' :          2,
+        'orange_hallway' :      2,
+        'mystery' :             2,
         'galaxy' :              1,
         'peacock' :             1,
         'alien_candy' :         1
@@ -32,7 +36,7 @@ def generate():
 
     rotateModel=True
     texture = None
-    testing = True
+    testing = False
     backgroundImage = None
 # colors=((1,1,1),(1,1,1))
 # backgroundColor = (0.5,0.5,0.5)
@@ -40,16 +44,16 @@ def generate():
 # colorPattern='gradient'
 # texture = '2.png'
     postProcess = ''
-    lights = (('p', (2, 2, 2, 1), 0, 0, 0), ('a', (0.5, 0.5, 0.5, 1)))
+    lights = (('p', (2, 2, 2, 1), 0, 0, 0), ('p', (1, 1, 1, 1), 0, 100, 0), ('a', (0.5, 0.5, 0.5, 1)))
     #THEMES
     if testing:
-        colors=((1,1,1),(1,1,1))
-        backgroundColor=(0.352, 0.749, 0.745)
-        texture='screen.jpg'
+        colors=((0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541))
+        backgroundColor=(0.964, 0.156, 0.925)
+        #texture='screen.jpg'
         filter=(0,0,False)
         colorPattern='gradient'
-        lights=[]
-        backgroundImage = 'tv.jpg'
+        lights = []
+        backgroundImage = '8.png'
     else:
         themeSeed = random()
         if themeSeed > themeProbs['common']:
@@ -59,7 +63,7 @@ def generate():
             filter=(0,0,False)
             colorPattern='gradient'
         elif themeSeed > themeProbs['neon_sunset']:
-            colors=((.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0))
+            colors=((.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0))
             backgroundColor=(0.074, 0.066, 0.309)
             filter=(1,0,False)
             colorPattern='gradient'
@@ -72,13 +76,13 @@ def generate():
         elif themeSeed > themeProbs['lava']:
             colors=((1, 0.549, 0.078),(1, 0.113, 0.078),(0.568, 0.188, 0.094),(0.925, 0.776, 0.196),(0.925, 0.196, 0.227),(0.627, 0.443, 0.133),(1, 0.549, 0.078),(1, 0.113, 0.078),(0.568, 0.188, 0.094),(0.925, 0.776, 0.196),(0.925, 0.196, 0.227),(0.627, 0.443, 0.133))
             backgroundColor=(0.819, 0.274, 0.101)
-            filter=(0,0.3,False)
+            filter=(0,0.15,False)
             colorPattern='gradient'
             lights = (('p', (2, 2, 2, 1), 0, 0, 0), ('a', (0.8, 0, 0, 1)))
         elif themeSeed > themeProbs['hubba_bubba']:
             colors=((0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384))
             backgroundColor=(0.901, 0.580, 0.886)
-            filter=(1,0,False)
+            filter=(1.3,0,False)
             colorPattern='gradient'
         elif themeSeed > themeProbs['yin_yang']:
             colors=((0,0,0),(1,1,1),(0,0,0),(1,1,1),(0,0,0),(1,1,1),(0,0,0))
@@ -129,6 +133,13 @@ def generate():
             filter=(0,0,False)
             colorPattern='gradient'
             lights = (('p', (1, 0, 2, 1), 70, 70, 70), ('p', (2, 0, 0, 1), -70, -70, -70), ('p', (0, 0.2, 1.5, 1), 70, -70, 35))
+        elif themeSeed > themeProbs['underwater']:
+            colors=((1,1,1),(1,1,1))
+            backgroundColor=(0.964, 0.156, 0.925)
+            filter=(0,0,False)
+            colorPattern='gradient'
+            lights = (('p', (0.066, 0.117, 0.411, 1), 90, 0, 90), ('p', (0.066, 0.301, 0.411, 1), -90, 0, 90), ('p', (0.258, 0.513, 0.941, 1), 90, 0, -90))
+            backgroundImage = '2.png'
         elif themeSeed > themeProbs['dark_energy']:
             colors=((1,1,1),(1,1,1))
             backgroundColor=(0.090, 0.007, 0.152)
@@ -136,13 +147,35 @@ def generate():
             filter=(0,0,True)
             colorPattern='gradient'
             lights=[]
-        elif themeSeed > themeProbs['light_energy']:
+        elif themeSeed > themeProbs['gradient_tv']:
             colors=((1,1,1),(1,1,1))
-            backgroundColor=(0.866, 0.980, 0.741)
-            texture='inverted_energy.png'
-            filter=(0,0,True)
+            backgroundColor=(0.964, 0.156, 0.925)
+            texture='screen.jpg'
+            filter=(0,0,False)
             colorPattern='gradient'
             lights=[]
+            backgroundImage = '0.png'
+        elif themeSeed > themeProbs['deep_space']:
+            colors=((1,1,1),(1,1,1))
+            backgroundColor=(0.964, 0.156, 0.925)
+            filter=(0,0,False)
+            colorPattern='gradient'
+            lights = (('p', (1.5, 1.5, 2, 1), 0, 0, 0), ('p', (0.490, 0.337, 0.584, 1), 50, 50, 50), ('p', (0.368, 0.513, 0.952, 1), -80, -80, 0))
+            backgroundImage = '1.png'
+        elif themeSeed > themeProbs['orange_hallway']:
+            colors=((1,1,1),(1,1,1))
+            backgroundColor=(0.964, 0.156, 0.925)
+            filter=(0,0,False)
+            colorPattern='gradient'
+            lights = (('p', (0.074, 0.129, 0.525, 1), 0, 0, 0), ('p', (1, 0.647, 0.141, 1), 50, 50, 50), ('p', (0.584, 0.137, 0.152, 1), -80, -80, 0))
+            backgroundImage = '6.png'
+        elif themeSeed > themeProbs['mystery']:
+            colors=((0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541),(0.4, 0.956, 0.611),(0.976, 0.580, 0.972),(0.968, 0.976, 0.580),(0, 0.074, 0.541))
+            backgroundColor=(0.964, 0.156, 0.925)
+            filter=(0,0,False)
+            colorPattern='gradient'
+            lights = []
+            backgroundImage = '8.png'
         elif themeSeed > themeProbs['galaxy']:
             colors=((1,0,0),(0,0,1))
             backgroundColor=(0.95,0.95,0.95)

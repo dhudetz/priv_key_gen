@@ -23,7 +23,7 @@ class App(ShowBase):
 
         self.origin = NodePath(LineSegs().create())
         self.origin.reparentTo(render)
-        self.origin.setPos(0.0,0.0,0.0)
+        self.origin.setPos(0.0,70.0,30.0)
 
         self.filters = CommonFilters(base.win, base.cam)
 
@@ -115,8 +115,8 @@ class App(ShowBase):
             self.filters.setBloom(blend=(0.5,0.5,0.5,1), mintrigger=0.5, maxtrigger=1.0, desat=1.0, intensity=self.prop['filter'][1], size="large")
         if len(self.prop['filter'])>2 and self.prop['filter'][2]:
             if len(self.snakeHeads)>self.prop['num_snakes']:
-                for i in range(self.prop['num_snakes']):
-                    self.filters.setVolumetricLighting(caster=self.snakeHeads[len(self.snakeHeads)-1-i],decay=0.9)
+                #for i in range(self.prop['num_snakes']):
+                    #self.filters.setVolumetricLighting(caster=self.snakeHeads[len(self.snakeHeads)-1-i],decay=0.9)
                 self.filters.setVolumetricLighting(caster=self.origin,decay=0.9)
         if self.prop['invert']:
             self.filters.setInverted()
@@ -235,8 +235,7 @@ class App(ShowBase):
             base.setBackgroundColor(averageGray,averageGray,averageGray)
 
         #render filter
-        if len(self.prop['filter'])>0:
-            self.renderFilter()
+        self.renderFilter()
 
         #save images for gif compiler
         if self.saveGif and (0 < self.frameNumber < self.maxFrames+1):
@@ -272,5 +271,5 @@ loadPrcFileData('', 'clock-mode limited')
 loadPrcFileData('', 'clock-frame-rate 1')
 
 #loadPrcFileData('', 'window-type offscreen')
-app = App(100, 400, True)
+app = App(1000, 400, True)
 app.run()
