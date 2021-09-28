@@ -25,17 +25,6 @@ class App(ShowBase):
         self.origin.reparentTo(render)
         self.origin.setPos(0.0,0.0,0.0)
 
-        #SET LIGHTING
-        plight = PointLight('plight')
-        plight.setColor((0.9, 0.9, 0.9, 0.5))
-        self.plnp = render.attachNewNode(plight)
-        self.plnp.setPos(5, 0, 5)
-        render.setLight(self.plnp)
-        alight = AmbientLight('alight')
-        alight.setColor((0.7, 0.7, 0.7, 1))
-        self.alnp = render.attachNewNode(alight)
-        render.setLight(self.alnp)
-
         self.filters = CommonFilters(base.win, base.cam)
 
         self.genNumber = -1
@@ -88,12 +77,11 @@ class App(ShowBase):
         if len(self.prop['lights']) > 0:
             for l in self.prop['lights']:
                 if l[0] == 'p':
-
                     light = PointLight('plight')
                     light.setColor(l[1])
                     lightNodePath = render.attachNewNode(light)
                     lightNodePath.setPos(l[2], l[3], l[4])
-                elif l[1] == 'a':
+                elif l[0] == 'a':
                     light = AmbientLight('alight')
                     light.setColor(l[1])
                     lightNodePath = render.attachNewNode(light)
@@ -121,16 +109,17 @@ class App(ShowBase):
 
     def renderFilter(self):
         #self.filters.setBloom(blend=(0.3,0.4,0.3,0.6), mintrigger=0.9, maxtrigger=1.0, desat=1.0, intensity=0.3, size="small")
-        if self.prop['filter'][0]>0:
+        if len(self.prop['filter'])>0 and self.prop['filter'][0]>0:
             self.filters.setCartoonInk(self.prop['filter'][0])
-        if self.prop['filter'][1]>0:
-            self.filters.setBloom(blend=(0.3,0,0,1), mintrigger=0.5, maxtrigger=1.0, desat=1.0, intensity=self.prop['filter'][1], size="large")
-        if self.prop['filter'][2]:
-            #self.filters.setInverted()
+        if len(self.prop['filter'])>1 and self.prop['filter'][1]>0:
+            self.filters.setBloom(blend=(0.5,0.5,0.5,1), mintrigger=0.5, maxtrigger=1.0, desat=1.0, intensity=self.prop['filter'][1], size="large")
+        if len(self.prop['filter'])>2 and self.prop['filter'][2]:
             if len(self.snakeHeads)>self.prop['num_snakes']:
                 for i in range(self.prop['num_snakes']):
                     self.filters.setVolumetricLighting(caster=self.snakeHeads[len(self.snakeHeads)-1-i],decay=0.9)
                 self.filters.setVolumetricLighting(caster=self.origin,decay=0.9)
+        if self.prop['invert']:
+            self.filters.setInverted()
         #self.filters.delVolumetricLighting()
 
         #self.filters.delAmbientOcclusion()
@@ -246,7 +235,8 @@ class App(ShowBase):
             base.setBackgroundColor(averageGray,averageGray,averageGray)
 
         #render filter
-        self.renderFilter()
+        if len(self.prop['filter'])>0:
+            self.renderFilter()
 
         #save images for gif compiler
         if self.saveGif and (0 < self.frameNumber < self.maxFrames+1):
@@ -256,7 +246,8 @@ class App(ShowBase):
         self.frameNumber += 1
         if self.frameNumber > self.maxFrames:
             self.clearFilters()
-            self.generateGif()
+            if self.saveGif:
+                self.generateGif()
             if self.genNumber < self.maxGens-1:
                 self.newGeneration()
             return Task.done
@@ -264,7 +255,7 @@ class App(ShowBase):
             return Task.cont
 
     def generateGif(self):
-        gif_compiler.generateGif(self.genNumber, self.maxFrames, self.prop['post_process'], self.prop['num_stickers'])
+        gif_compiler.generateGif(self.genNumber, self.maxFrames, self.prop)
         return Task.done
 
 	# Define a procedure to move the camera.

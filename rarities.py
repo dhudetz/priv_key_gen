@@ -9,11 +9,14 @@ def generate():
         'hubba_bubba' :         5,
         'yin_yang' :            5,
         'rgb_zebra':            5,
+        'print_stream' :        5,
         'purple_zebra' :        5,
         'sprinkles' :           5,
         'rainbow' :             2,
-        'diamond' :             2,
-        'red_blue' :            5,
+        'earth' :               5,
+        'red_blue' :            2,
+        'dark_energy' :         2,
+        'light_energy' :        2,
         'galaxy' :              1,
         'peacock' :             1,
         'alien_candy' :         1
@@ -29,23 +32,24 @@ def generate():
 
     rotateModel=True
     texture = None
-    testing = False
-
+    testing = True
+    backgroundImage = None
 # colors=((1,1,1),(1,1,1))
 # backgroundColor = (0.5,0.5,0.5)
 # filter=(1,0,False)
 # colorPattern='gradient'
 # texture = '2.png'
     postProcess = ''
-    lights = (('p', (0.9, 0.9, 0.9, 1), 0, 0, 0),('a', (0.5, 0.5, 0.5, 1)))
+    lights = (('p', (2, 2, 2, 1), 0, 0, 0), ('a', (0.5, 0.5, 0.5, 1)))
     #THEMES
     if testing:
-        colors=((1, 0.549, 0.078),(1, 0.113, 0.078),(0.568, 0.188, 0.094),(0.925, 0.776, 0.196),(0.925, 0.196, 0.227),(0.627, 0.443, 0.133),(1, 0.549, 0.078),(1, 0.113, 0.078),(0.568, 0.188, 0.094),(0.925, 0.776, 0.196),(0.925, 0.196, 0.227),(0.627, 0.443, 0.133))
-        backgroundColor=(0.819, 0.274, 0.101)
-        filter=(0,0.1,False)
+        colors=((1,1,1),(1,1,1))
+        backgroundColor=(0.352, 0.749, 0.745)
+        texture='screen.jpg'
+        filter=(0,0,False)
         colorPattern='gradient'
-
-        #postProcess='starrynight.jfif'
+        lights=[]
+        backgroundImage = 'tv.jpg'
     else:
         themeSeed = random()
         if themeSeed > themeProbs['common']:
@@ -57,39 +61,49 @@ def generate():
         elif themeSeed > themeProbs['neon_sunset']:
             colors=((.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0),(.55,.2,1),(0.9,0.4,0))
             backgroundColor=(0.074, 0.066, 0.309)
-            filter=(0,0,False)
+            filter=(1,0,False)
             colorPattern='gradient'
         elif themeSeed > themeProbs['ice']:
             colors=((0.788, 0.898, 0.972),(0.588, 0.749, 0.894),(0.788, 0.898, 0.972),(0.588, 0.749, 0.894),(0.788, 0.898, 0.972),(0.588, 0.749, 0.894))
             backgroundColor=(0.937, 0.949, 0.960)
             filter=(1,0,False)
             colorPattern='gradient'
+            lights = (('p', (1, 1, 1, 1), 0, 0, 0), ('p', (1, 1, 1, 1), 0, 79, 0), ('a', (0.4, 0.4, 0.6, 1)))
         elif themeSeed > themeProbs['lava']:
             colors=((1, 0.549, 0.078),(1, 0.113, 0.078),(0.568, 0.188, 0.094),(0.925, 0.776, 0.196),(0.925, 0.196, 0.227),(0.627, 0.443, 0.133),(1, 0.549, 0.078),(1, 0.113, 0.078),(0.568, 0.188, 0.094),(0.925, 0.776, 0.196),(0.925, 0.196, 0.227),(0.627, 0.443, 0.133))
             backgroundColor=(0.819, 0.274, 0.101)
-            filter=(0,0.1,False)
+            filter=(0,0.3,False)
             colorPattern='gradient'
+            lights = (('p', (2, 2, 2, 1), 0, 0, 0), ('a', (0.8, 0, 0, 1)))
         elif themeSeed > themeProbs['hubba_bubba']:
             colors=((0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384),(0.921, 0.227, 0.933),(0.227, 0.933, 0.384))
             backgroundColor=(0.901, 0.580, 0.886)
-            filter=(0,0,False)
+            filter=(1,0,False)
             colorPattern='gradient'
         elif themeSeed > themeProbs['yin_yang']:
             colors=((0,0,0),(1,1,1),(0,0,0),(1,1,1),(0,0,0),(1,1,1),(0,0,0))
             backgroundColor='opposite'
-            filter=(1,0,False)
+            filter=(0,0,False)
             colorPattern='gradient'
             lights = []
         elif themeSeed > themeProbs['rgb_zebra']:
             colors=((0.182, 0.578, 0.697),(1,1,1),(0.904, 0.110, 0.0013),(1,1,1),(0.535, 0.928, 0.0319),(1,1,1))
             backgroundColor=(0.2,0.2,0.2)
-            filter=(2,0,False)
+            filter=(1,0,False)
             colorPattern='alternate'
+            lights=[]
+        elif themeSeed > themeProbs['print_stream']:
+            colors=((0.929, 0.501, 1),(1, 0.984, 0.521),(0.505, 0.921, 0.992),(0.929, 0.501, 1),(1, 0.984, 0.521),(0.505, 0.921, 0.992),(0.929, 0.501, 1),(1, 0.984, 0.521),(0.505, 0.921, 0.992),(0.929, 0.501, 1),(1, 0.984, 0.521),(0.505, 0.921, 0.992),(0.929, 0.501, 1),(1, 0.984, 0.521),(0.505, 0.921, 0.992),(0.929, 0.501, 1),(1, 0.984, 0.521),(0.505, 0.921, 0.992))
+            backgroundColor=(0.043, 0, 0.117)
+            filter=(0,0.1,False)
+            colorPattern='gradient'
+            lights=[]
         elif themeSeed > themeProbs['purple_zebra']:
             colors=((0.862, 0.545, 0.933),(1,1,1),(0.619, 0.380, 0.741),(1,1,1),(0.882, 0.623, 0.917),(1,1,1))
             backgroundColor=(0.756, 0.580, 0.901)
             filter=(0,0.4,False)
             colorPattern='alternate'
+            lights = (('p', (1, 1, 1, 1), 0, 0, 0), ('p', (1, 1, 1, 1), 60, 0, 60), ('a', (0.5, 0.5, 0.5, 1)))
         elif themeSeed > themeProbs['sprinkles']:
             texture = 'rainbow.png'
             colors=((1,1,1),(1,1,1))
@@ -101,17 +115,34 @@ def generate():
             backgroundColor = 'opposite'
             filter=(1,0,False)
             colorPattern='gradient'
-        elif themeSeed > themeProbs['diamond']:
-            texture = '1.png'
+            lights = []
+        elif themeSeed > themeProbs['earth']:
+            texture = '0.png'
             colors=((1,1,1),(1,1,1))
-            backgroundColor = (0.8,0.8,1)
-            filter=(1,0,False)
+            backgroundColor = (0,0,0.2)
+            filter=(0.5,0.1,False)
+            lights = (('p', (2, 2, 2, 1), 0, 0, 0), ('a', (0.5, 0.5, 0.5, 1)))
             colorPattern='gradient'
         elif themeSeed > themeProbs['red_blue']:
-            colors=((1,0,0),(0,0,1),(1,0,0),(0,0,1),(1,0,0),(0,0,1),(1,0,0),(0,0,1),(1,0,0))
-            backgroundColor=(0.87,0.83,0.87)
-            filter=(1,0,True)
+            colors=((1,1,1),(1,1,1))
+            backgroundColor=(0,0,0)
+            filter=(0,0,False)
             colorPattern='gradient'
+            lights = (('p', (1, 0, 2, 1), 70, 70, 70), ('p', (2, 0, 0, 1), -70, -70, -70), ('p', (0, 0.2, 1.5, 1), 70, -70, 35))
+        elif themeSeed > themeProbs['dark_energy']:
+            colors=((1,1,1),(1,1,1))
+            backgroundColor=(0.090, 0.007, 0.152)
+            texture='energy.jfif'
+            filter=(0,0,True)
+            colorPattern='gradient'
+            lights=[]
+        elif themeSeed > themeProbs['light_energy']:
+            colors=((1,1,1),(1,1,1))
+            backgroundColor=(0.866, 0.980, 0.741)
+            texture='inverted_energy.png'
+            filter=(0,0,True)
+            colorPattern='gradient'
+            lights=[]
         elif themeSeed > themeProbs['galaxy']:
             colors=((1,0,0),(0,0,1))
             backgroundColor=(0.95,0.95,0.95)
@@ -132,10 +163,12 @@ def generate():
             postProcess='spiral.jpg'
 
     modelProbs = {
-        'monkey' : 0.99,
-        'shard' : 0.95,
-        'icosahedron' : 0.5,
-        'cube' : 0
+        'monkey'        : 0.995,
+        'torus'         : 0.98,
+        'shard'         : 0.96,
+        'icosahedron'   : 0.56,
+        'cone'          : 0.46,
+        'cube'          : 0
     }
     #MODEL SELECTION
     modelSeed = random()
@@ -143,6 +176,10 @@ def generate():
         sizeNormalizer = 8
         scaleMod = (1,1,1)
         modelType = 'monkey.egg'
+    elif modelSeed > modelProbs['torus']:
+        sizeNormalizer = 14
+        scaleMod = (1,1,1)
+        modelType = 'toris.egg'
     elif modelSeed > modelProbs['shard']:
         sizeNormalizer = 2
         scaleMod = (3,0.5,0.5)
@@ -151,6 +188,10 @@ def generate():
         sizeNormalizer = 2
         scaleMod = (1,1,1)
         modelType = 'Icosahedron.egg'
+    elif  modelSeed > modelProbs['cone']:
+        sizeNormalizer = 8
+        scaleMod = (1,1,1)
+        modelType = 'cone.egg'
     elif modelSeed > modelProbs['cube']:
         sizeNormalizer = 4.5
         scaleMod = (1,1,1)
@@ -233,15 +274,18 @@ def generate():
     if random() > 0.5:
         spinSpeed*-1
 
-    #TEXTURES
-    backgroundImage = None #BACKGROUND IMAGES DONT WORK WITH FILTERING ON
 
-
-    mirrorProb = 0.8
-    if random() > mirrorProb: #I WANT DOUBLE MIRRORS
-        mirror = True #7
+    mirrorProb = 0.6
+    if random() > mirrorProb:
+        mirror = True
     else:
         mirror = False
+
+    invertProb = 1
+    if random() > invertProb:
+        invert = True #7
+    else:
+        invert = False
 
     shapeProbs = {
         'wire_snake' : 0.8,
@@ -261,8 +305,8 @@ def generate():
 
     #STICKERGEN
     stickerProbs = {
-        '3' : 0.9995,
-        '2' : 0.995,
+        '3' : 0.999875,
+        '2' : 0.9975,
         '1' : 0.95,
         '0' : 0
     }
@@ -299,6 +343,7 @@ def generate():
         'filter' : filter,
         'rotate_model' : rotateModel,
         'post_process' : postProcess,
-        'lights' : lights
+        'lights' : lights,
+        'invert' : invert
     }
     return prop
